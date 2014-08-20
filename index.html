@@ -2,8 +2,105 @@
 <html>
 	<head>
 		<title>GAIA</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<!-- Default stylesheet for smart phones and tablets -->
+		<link rel="stylesheet" href="/css/style.css" />
+		<link rel="stylesheet" href="/css/idangerous.swiper.css" />
+		<link href='http://fonts.googleapis.com/css?family=Raleway:200,300,400,600' rel='stylesheet' type='text/css'>
+		<script type="text/javascript">
+			// asynchronous font loading : https://github.com/typekit/webfontloader
+			WebFontConfig = {
+				google : {
+					families : ['Raleway:200,300,400,600']
+				},
+				custom : {
+					families : ['Nanum Gothic'],
+					urls : ['http://fonts.googleapis.com/earlyaccess/nanumgothic.css']
+				}
+			};
+			(function() {
+				var wf = document.createElement('script');
+				wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1.4.10/webfont.js';
+				wf.type = 'text/javascript';
+				wf.async = 'true';
+				var s = document.getElementsByTagName('script')[0];
+				s.parentNode.insertBefore(wf, s);
+			})();
+		</script>
+		<script src="/js/jquery-2.1.1.min.js"></script>
+		<script src="/js/idangerous.swiper.js"></script>
+
 	</head>
 	<body>
-		<h1>Hello world!</h1>
+		<div id="navBar"></div>
+		<a href=""><div id="homeButton"></div></a>
+		<div id="sidePanelToggle">
+			<!---->
+		</div>
+		<div class="container">
+			<div class="swiper-container">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<div class="content-slide">
+							<h1>Hello world!</h1>
+						</div>
+					</div>
+					<div class="swiper-slide">
+						<div class="content-slide">
+							<h1>Second world!</h1>
+						</div>
+					</div>
+					<div class="swiper-slide">
+						<div class="content-slide">
+							<p class="title">
+								Slide with HTML
+							</p>
+							<p>
+								You can put any HTML inside of slide with any layout, not only images, even another Swiper!
+							</p>
+						</div>
+					</div>
+					<div class="swiper-slide">
+						<div class="content-slide">
+							<p lang="ko" class="title">
+								한글 페이지
+							</p>
+							<p lang="ko">
+								4번째 페이지에는 프로필 상세 정보가 들어가게 됩니다. 한글 내용은 lang="ko" attribute을 넣어주면 나눔고딕으로 표현됩니다.
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="pagination"></div>
+			</div>
+
+		</div>
+		<div id="indiBar"></div>
+		<div id="badgePageButton"></div>
+		<div id="mapPageButton"></div>
+		<div id="videoPageButton"></div>
+		<div id="profilePageButton"></div>
+		<script>
+			var mySwiper = new Swiper('.swiper-container', {
+				pagination : '.pagination',
+				loop : true,
+				grabCursor : true,
+				paginationClickable : true
+			});
+			$(".tabs a").on('touchstart mousedown', function(e) {
+				e.preventDefault();
+				$(".tabs .active").removeClass('active');
+				$(this).addClass('active');
+				tabsSwiper.swipeTo($(this).index());
+			});
+			$(".tabs a").click(function(e) {
+				e.preventDefault();
+			});
+		</script>
 	</body>
 </html>
