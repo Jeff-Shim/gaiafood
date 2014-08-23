@@ -30,6 +30,10 @@
         background: #FFFFFF;
     }
     
+    .swiper-slide {
+        height: 100%;
+    }
+    
     #map-canvas {
         margin: 0;
         height: 50%;
@@ -46,7 +50,7 @@
         background: #08C35D;
     }
 
-/* Badge Slides */
+/* Badge Slides (1st page) */
 
     .badge-card {
         background: #f6f6f6;
@@ -56,6 +60,8 @@
         margin: auto;
         position: relative;
         top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
         transform: translateY(-50%);
     }
 
@@ -64,6 +70,33 @@
         margin: 0 auto;
         max-width: 454px;
         max-height: 60%;
+        height: 60%;
+    }
+    
+/* Map & Search Page (2nd page) */
+
+    .item-title {
+        line-height: 1.4em;
+    }    
+    
+    .item-title p {
+        margin: 0;
+    }
+    
+    .item-title p.discountCaption {
+        background: url('images/tag.png') left center no-repeat;
+        background-size: 1em;
+        padding-left: 1em;
+        font-size: 0.7em;
+        line-height: 1em;
+    }
+    
+    .item-title p.discountCaption2 {
+        background: url('images/tag2.png') left center no-repeat;
+        background-size: 1em;
+        padding-left: 1em;
+        font-size: 0.7em;
+        line-height: 1em;
     }
     
 /* Upper sidebar */

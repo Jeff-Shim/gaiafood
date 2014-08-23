@@ -107,112 +107,15 @@
 										</div>
 										<div class="swiper-slide">
 											<!--NEVER EVER MAKE WHITESPACE between map-canvas div and list-block div-->
-											<div class="map-container" id="map-canvas"></div><div class="list-block">
+											<div class="map-container" id="map-canvas"></div><div id="affiliateList" class="list-block">
 												<ul>
-													<li lang="ko" class="item-divider">
-														근처 가맹점
-													</li>
-													<li>
-														<a href="about.html" class="item-link item-content">
-														<div class="item-media">
-															<img src="img/chocolate_cake.jpg" />
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Item title
-															</div>
-															<div class="item-after">
-																Label
-															</div>
-														</div> </a>
-													</li>
-													<li>
-														<a href="#" class="item-link item-content">
-														<div class="item-media">
-															<i class="icon icon-f7"></i>
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Item with badge
-															</div>
-															<div class="item-after">
-																<span class="badge">5</span>
-															</div>
-														</div> </a>
-													</li>
-													<li>
-														<a href="#" class="item-link item-content">
-														<div class="item-media">
-															<i class="icon icon-f7"></i>
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Another item
-															</div>
-															<div class="item-after">
-																Another label
-															</div>
-														</div> </a>
-													</li>
-													<li>
-														<a href="#" class="item-link item-content">
-														<div class="item-media">
-															<i class="icon icon-f7"></i>
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Another item
-															</div>
-															<div class="item-after">
-																Another label
-															</div>
-														</div> </a>
-													</li>
-													<li>
-														<a href="#" class="item-link item-content">
-														<div class="item-media">
-															<i class="icon icon-f7"></i>
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Another item
-															</div>
-															<div class="item-after">
-																Another label
-															</div>
-														</div> </a>
-													</li>
-													<li>
-														<a href="#" class="item-link item-content">
-														<div class="item-media">
-															<i class="icon icon-f7"></i>
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Another item
-															</div>
-															<div class="item-after">
-																Another label
-															</div>
-														</div> </a>
-													</li>
-													<li>
-														<a href="#" class="item-link item-content">
-														<div class="item-media">
-															<i class="icon icon-f7"></i>
-														</div>
-														<div class="item-inner">
-															<div class="item-title">
-																Another item
-															</div>
-															<div class="item-after">
-																Another label
-															</div>
-														</div> </a>
+													<li lang="ko" id="affiliateListTitle" class="item-divider">
+														지도 내 가맹점
 													</li>
 												</ul>
-												<div class="list-block-label">
-													List block label text goes here
+												<div lang="ko" id="affiliateListText" class="list-block-label">
+													가맹점 목록 로딩 중...
+													<p>현재 위치 공유를 허용하지 않으시면 가맹점 검색 서비스는 사용하실 수 없습니다.</p>
 												</div>
 											</div>
 										</div>

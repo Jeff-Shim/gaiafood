@@ -1,13 +1,10 @@
 window.onload = loadScript;
 
-
-
-
 /**********************
  * Google Maps Scripts *
  ***********************/
 var currentLocation = null;
-var markers = [];
+var lastmarkers = [];
 var infos = [];
 // global variable (currently open infowindow)
 function initialize() {
@@ -20,6 +17,8 @@ function initialize() {
 	};
 
 	var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	// attach a listener to the map idle event to make it execute a function called showMarkers() when the map stops panning.
+
 	(function() {/*
 		 OverlappingMarkerSpiderfier
 		 https://github.com/jawj/OverlappingMarkerSpiderfier
@@ -387,10 +386,11 @@ function initialize() {
 
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
+			google.maps.event.addListener(map, 'idle', showMarkers);
 			// When user allowed to send their location
 			initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 			map.setCenter(initialLocation);
-			map.setZoom(14);
+			map.setZoom(15);
 			// 현재 위치를 가져와서 화면의 중심으로 만드는 단계
 
 			var markersArray = [];
@@ -398,14 +398,14 @@ function initialize() {
 			var marker = new google.maps.Marker({
 				position : initialLocation,
 				map : map,
-				//icon : 'images/eye1.png',
+				icon : 'img/man.png',
 				title : "Hello!",
 				content : 'Current Location'
 			});
 			oms.addMarker(marker);
 			var infowindow = new google.maps.InfoWindow();
 			oms.addListener('click', function(marker, event) {
-				markers[0] = marker;
+				lastmarkers[0] = marker;
 				closeInfos();
 				infowindow.setContent(marker.content);
 				infowindow.open(map, marker);
@@ -415,6 +415,78 @@ function initialize() {
 			currentLocation = marker;
 
 			window.setInterval(updateLocation, 5000);
+
+			showMarkers();
+
+			function showMarkers() {
+				var bounds = map.getBounds();
+				var sw = bounds.getSouthWest();
+				var ne = bounds.getNorthEast();
+				downloadUrl("php/php_genaffiliatexml.php?swlat=" + sw.lat() + "&swlng=" + sw.lng() + "&nelat=" + ne.lat() + "&nelng=" + ne.lng(), function(data) {
+					var xml = data.responseXML;
+					var markers = xml.documentElement.getElementsByTagName("affiliate");
+					var info;
+					// remove existing markers and list items
+					for (var i = 0; i < markersArray.length; i++) {
+						markersArray[i].setMap(null);
+					}
+					markersArray = [];
+					$('#affiliateList li').not('#affiliateListTitle').remove();
+					// add markers
+					for (var i = 0; i < markers.length; i++) {
+						var name = markers[i].getAttribute("name");
+						var address = markers[i].getAttribute("address");
+						var type = markers[i].getAttribute("type");
+						var point = new google.maps.LatLng(parseFloat(markers[i].getAttribute("lat")), parseFloat(markers[i].getAttribute("lng")));
+						var html = "<b>" + name + "</b> <br/>" + address;
+						var discountType;
+						if (markers[i].getAttribute("discount1")) {
+							if (markers[i].getAttribute("discount2")) {
+								discountType = 2;
+							} else {
+								discountType = 1;
+							}
+						} else {
+							if (markers[i].getAttribute("discount2")) {
+								discountType = 1;
+							} else {
+								discountType = 0;
+							}
+						}
+						var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + PinColor(discountType), new google.maps.Size(21, 34), new google.maps.Point(0, 0), new google.maps.Point(10, 34));
+						marker = new google.maps.Marker({
+							map : map,
+							position : point,
+							content : html,
+							icon : pinImage
+						});
+
+						oms.addMarker(marker);
+						//Pushing the markers into an array so that it's easier to manage them
+						markersArray.push(marker);
+						info = new google.maps.InfoWindow({
+							maxWidth : 240
+						});
+						oms.addListener('click', function(marker, event) {
+							lastmarkers[0] = marker;
+							closeInfos();
+							info.setContent(marker.content);
+							info.open(map, marker);
+							infos[0] = info;
+						});
+						oms.addListener('spiderfy', function(markers) {
+							info.close();
+						});
+						$("#affiliateList ul").append('<li><a href="about.html" class="item-link item-content"><div class="item-media"><img src="affiliate/' + markers[i].getAttribute("id") + '/thumbnail.jpg" /></div><div class="item-inner"><div class="item-title"><p>' + markers[i].getAttribute("name") + '</p><p class="discountCaption">' + markers[i].getAttribute("discount1") + '</p><p class="discountCaption2">' + markers[i].getAttribute("discount2") + '</p></div><div class="item-after"></div></div></a></li>');
+					}
+					if(markersArray.length != 0) {
+						$('#affiliateListText').html('총 ' + markersArray.length + '개의 가맹점');
+					}
+					else {
+						$('#affiliateListText').html('해당 영역 내에 가맹점이 없습니다.');
+					}
+				});
+			}
 
 			// update current location
 			function updateLocation() {
@@ -435,49 +507,24 @@ function initialize() {
 				}
 			}
 
-			function PinColor(Rating) {
-				switch(Rating) {
-					case 0:
-						return '555';
-						break;
-					case 1:
-						return '707070';
-						break;
-					case 2:
-						return '898989';
-						break;
-					case 3:
-						return 'a1a1a1';
-						break;
-					case 4:
-						return 'b7b7b7';
-						break;
-					case 5:
-						return 'ccc';
-						break;
-					case 6:
-						return 'e1e1e1';
-						break;
-					case 7:
-						return 'fff';
-						break;
-					case 8:
-						return '70ad47';
-						break;
-					case 9:
-						return 'ffc000';
-						break;
-					case 10:
-						return 'ff0000';
-						break;
-					default:
-						return 'ffc000';
-						break;
+			function PinColor(discountType) {
+				switch(discountType) {
+				case 0:
+					return 'fff';
+					break;
+				case 1:
+					return 'ffc000';
+					break;
+				case 2:
+					return 'ff0000';
+					break;
 				}
 			}
 
 		});
-
+	}
+	else {
+		$('#affiliateListText').html('현재 위치 공유를 허용하지 않으시면 가맹점 검색 서비스는 사용하실 수 없습니다.');
 	}
 
 	/*
@@ -492,15 +539,16 @@ function initialize() {
 
 }
 
-var width = $(window).width(); // 기존 가로 크기
-var height = $(window).height(); // 기존 세로 크기
-function jqUpdateSize() { /* 브라우저 크기가 변할 때 아래와 같은 조작을 한다 */
-	if($(window).width() > $(window).height()) {
-		if($(window).height() < 533) {
-			$('p').css('margin', '0');
-		}
-		else {
-			$('p').css('margin', '');
+var width = $(window).width();
+// 기존 가로 크기
+var height = $(window).height();
+// 기존 세로 크기
+function jqUpdateSize() {/* 브라우저 크기가 변할 때 아래와 같은 조작을 한다 */
+	if ($(window).width() > $(window).height()) {
+		if ($(window).height() < 533) {
+			$('p').not('.item-inner p').css('margin', '0');
+		} else {
+			$('p').not('.item-inner p').css('margin', '');
 		}
 		$('#map-canvas').css('height', '100%');
 		$('#map-canvas').css('width', '50%');
@@ -510,25 +558,44 @@ function jqUpdateSize() { /* 브라우저 크기가 변할 때 아래와 같은 
 		$('.list-block').css('width', 'calc(50% - 1px)');
 		$('.list-block').css('border-left', '1px solid #c8c7cc');
 		$('.list-block').css('display', 'inline-block');
-	}
-	else {
+	} else {
 		$('p').css('margin', '');
 		$('#map-canvas').css('height', '');
 		$('#map-canvas').css('width', '');
 		$('#map-canvas').css('display', '');
 		$('.list-block').removeAttr('style');
 	}
-	width = $(window).width(); // 기존 가로 크기
+	width = $(window).width();
+	// 기존 가로 크기
 	height = $(window).height();
 }
+
 var timer;
-$(window).resize(function () {
-    // 브라우저 크기가 바뀌는 것을 인식한다.
-    clearTimeout(timer);
-    timer = setTimeout(jqUpdateSize, 100);
-    // it doesn't have to be too fast
+$(window).resize(function() {
+	// 브라우저 크기가 바뀌는 것을 인식한다.
+	clearTimeout(timer);
+	timer = setTimeout(jqUpdateSize, 100);
+	// it doesn't have to be too fast
 });
 
+function downloadUrl(url, callback) {
+	var request = window.ActiveXObject ? new ActiveXObject('Microsoft.XMLHTTP') : new XMLHttpRequest;
+
+	request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			request.onreadystatechange = doNothing;
+			callback(request, request.status);
+		}
+	};
+
+	request.open('GET', url, true);
+	request.send(null);
+}
+
+function doNothing() {
+}
+
+var pageDepth = 0;
 function loadScript() {
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
@@ -540,11 +607,21 @@ function loadScript() {
 	var $$ = Dom7;
 	// Add view
 	var mainView = myApp.addView('.view-main');
-	myApp.onPageInit('*', function (page) {
-	 	 $('#underBar').transition({ y: '3em' });
+	myApp.onPageInit('*', function(page) {
+		pageDepth++;
+		$('#underBar').transition({
+			y : '3em'
+		});
 	});
-	myApp.onPageBeforeRemove('*', function (page) {
-	 	 $('#underBar').transition({ y: '0em' });
+	myApp.onPageBeforeRemove('*', function(page) {
+		pageDepth--;
+		if (pageDepth == 0) {
+			$('#underBar').transition({
+				y : '0em'
+			});
+		}
 	});
+	$('.swiper-slide').css('height', $('.swiper-container').css('height'));
 	jqUpdateSize();
 }
+
