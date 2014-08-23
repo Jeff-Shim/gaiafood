@@ -28,6 +28,19 @@ Basic Swiper Styles
 	/* Fix of Webkit flickering */
 	z-index:1;
 }
+.vertical-swiper-container {
+    margin:0 auto;
+    /*position:relative;*/
+    overflow:hidden;
+    -webkit-backface-visibility:hidden;
+    -moz-backface-visibility:hidden;
+    -ms-backface-visibility:hidden;
+    -o-backface-visibility:hidden;
+    backface-visibility:hidden;
+    /* Fix of Webkit flickering */
+    z-index:1;
+}
+
 .swiper-wrapper {
 	position:relative;
 	width:100%;
@@ -90,17 +103,19 @@ sizes, pagination, etc.
 ================================================================*/
 .swiper-container {
 	/* Specify Swiper's Size: */
-	/*width:200px;
-	height: 100px;*/
+	
+	height: 100%;
+}
+.vertical-swiper-container {
+    height: 100%;
 }
 .swiper-slide {
 	/* Specify Slides's Size: */
 	width: 100%;
-	height: 100%;
+	/*height: 100%;*/
 }
 .swiper-slide-active {
 	/* Specific active slide styling: */
-	
 }
 .swiper-slide-visible {
 	/* Specific visible slide styling: */	
@@ -110,7 +125,7 @@ sizes, pagination, etc.
 Pagination Styles
 ================================================================*/
 .pagination {
-    position: fixed;
+    position: absolute;
     z-index: 50;
     left: 0;
     bottom: 0;
@@ -128,9 +143,37 @@ Pagination Styles
 	cursor: pointer;
 }
 .swiper-active-switch {
-	background-color: rgba(68, 168, 86, 0.8);
+	background-color: rgba(8, 195, 93, 0.8);
 	
 }
 .swiper-visible-switch {
 	
+}
+
+.vertical-pagination {
+    position: absolute;
+    z-index: 50;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0.3em;
+}
+
+.vertical-pagination-switch {
+    display: block;
+    margin-bottom: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background: #222;
+    opacity: 0.8;
+    border: 1px solid #fff;
+    cursor: pointer;
+}
+
+.vertical-active-switch {
+    background: #fff;
+}
+
+.vertical-visible-switch {
+    background: #aaa;
 }
